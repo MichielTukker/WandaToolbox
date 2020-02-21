@@ -1,8 +1,8 @@
 import unittest
 
 
-class MyTestCase(unittest.TestCase):
-    def test_something(self):
+class WandaToolboxTestCase(unittest.TestCase):
+    def test_PDF(self):
         self.assertEqual(True, False)
 
 
