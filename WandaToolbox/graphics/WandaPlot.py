@@ -3,7 +3,7 @@ from typing import List, Tuple
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import numpy as np
-from src.util import get_min_max_pipe, get_min_max_pipe_relative, get_route_data
+from WandaToolbox.util import get_min_max_pipe, get_min_max_pipe_relative, get_route_data
 
 
 def plot_7box(figure, title, case_title, case_description, proj_number, section_name, fig_name, company_name="Deltares",
