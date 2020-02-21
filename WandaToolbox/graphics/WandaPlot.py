@@ -3,11 +3,12 @@ from typing import List, Tuple
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import numpy as np
-from WandaToolbox.util import get_min_max_pipe, get_min_max_pipe_relative, get_route_data
+from WandaToolbox.util import get_min_max_pipe, get_min_max_pipe_relative, get_route_data, get_syschar
 
 
 def plot_7box(figure, title, case_title, case_description, proj_number, section_name, fig_name, company_name="Deltares",
-              software_version="Wanda 4.6", company_image="", fontsize=12):
+              software_version="Wanda 4.6", company_image=None,
+              fontsize=12):
     """
     Creates box around and in the plot window. Also fills in some info about the calculation.
     Based on the 7-box WL-layout.
@@ -84,18 +85,18 @@ def plot_7box(figure, title, case_title, case_description, proj_number, section_
                 verticalalignment='center', horizontalalignment='center',
                 color='black', fontsize=fontsize)
 
-    if company_image:
-        img = plt.imread(company_image)
+    if company_image is not None:
         imgax = figure.add_axes([v1, h0, v3 - v1, h3 - h0], zorder=-10)
-        imgax.imshow(img, alpha=0.3, interpolation='none')
+        imgax.imshow(company_image, alpha=0.3, interpolation='none')
         imgax.axis('off')
 
 
 class PlotObject:
     """
     PlotObject
-    Base class for dfifferent types of plots
+    Base class for different types of plots
     """
+
     def __init__(self, title, xlabel, ylabel, xmin=None, xmax=None, xscale=1.0, ymin=None, ymax=None, yscale=1.0):
         self.title = title
         self.xlabel = xlabel
@@ -193,20 +194,53 @@ class PlotRoute(PlotObject):
 
 
 class PlotSyschar(PlotObject):
+    """PlotObject for system characteristics
+
+    This PlotObject allows for adding system characteristics in PDF appendices for reports. It automatically calculates
+    the system characteristic for a given model and flow scenarios.
+    Please see help(PlotSyschar.__init__)
+
+    Attributes:
+        none.
+
+    Arguments
     """
-    PlotObject for system characteristics
-    """
-    # def __init__(self, pipes, annotations, prop, times, *args, plot_elevation=False, **kwargs):
-    def __init__(self, discharges, head_series, series_names, *args, **kwargs):
-        self.discharges = discharges
-        self.head_series = head_series
-        self.series_names = series_names
+
+    def __init__(self, component_name, max_flowrate, description, discharge_dataframe, supplier_column, scenario_names,
+                 number_of_points, *args, **kwargs):
+        """
+        :param component_name: Name of the component the calculate the system characteristic for
+        :param max_flowrate: Maximum flowrate
+        :param description: Text description of this component
+        :param discharge_dataframe: Pandas dataframe with discharges of other suppliers in the model
+        :param supplier_column: Column name that contains the names of the Wanda components that represent the suppliers
+        :param scenario_names: List of scenario names (names of columns in discharge_dataframe
+        :param number_of_points: Number of steps for the system characteristic calculation. Default = 10
+        :param args: remaining arguments for PlotObject (minimum: Title, xlabel, ylabel)
+        :param kwargs:
+        """
+        self.component_name = component_name
+        self.max_flowrate = max_flowrate
+        self.discharge_dataframe = discharge_dataframe
+        self.supplier_column = supplier_column
+        self.scenario_names = scenario_names
+        self.n_points = number_of_points
         super().__init__(*args, **kwargs)
 
     def plot(self, model, ax):
         color_ind = 0
-        for scenario, heads in self.head_series.items():
-            ax.plot(self.discharges[scenario], heads, label=scenario, marker = 'o', linestyle='--', c=f'C{color_ind}', zorder=-1)
+        suppliers = self.discharge_dataframe[self.supplier_column].tolist()
+        flows = {}
+        head_series = {}
+        for scenario in self.scenario_names:
+            print(f'Generating plot for {self.component_name}, max Q={self.max_flowrate * 3600 * 24:{2}.{6}} m3/day')
+            discharges, heads = get_syschar(model, self.discharge_dataframe, self.component_name, self.max_flowrate,
+                                            scenario, self.n_points)
+            flows[scenario] = [q * 3600 * 24 for q in discharges]  # display discharge in m3/day
+            head_series[scenario] = heads
+
+        for scenario, heads in head_series.items():
+            ax.plot(flows[scenario], heads, label=scenario, marker='o', linestyle='--', c=f'C{color_ind}', zorder=-1)
             color_ind += 1
         self._plot_finish(ax)
 
@@ -216,6 +250,7 @@ class PlotTimeseries(PlotObject):
     PlotObject for Time series
     Only supports a single axis.
     """
+
     def __init__(self, collection=List[Tuple[str, str, str]], *args, **kwargs):
         self.collection = collection
         super().__init__(*args, **kwargs)
@@ -232,11 +267,13 @@ class PlotTimeseries(PlotObject):
 
         self._plot_finish(ax)
 
+
 class PlotText(PlotObject):
     """
     PlotObject for Text
     Only supports a single axis.
     """
+
     def __init__(self, text, *args, **kwargs):
         self.text = text
         super().__init__(title='', xlabel='', ylabel='')
@@ -245,9 +282,10 @@ class PlotText(PlotObject):
         props = dict(boxstyle='round', facecolor='white', alpha=0.5)
         ax.axis("off")
         ax.text(-0.1, 1.0, self.text, transform=ax.transAxes, size=8, fontsize=9,
-        verticalalignment='top', bbox=props)
+                verticalalignment='top', bbox=props)
         # ax.legend("off")
         self._plot_finish(ax)
+
 
 def plot(model, plot_objects, *args, **kwargs):
     fig = plt.figure(figsize=(8.27, 11.69))
