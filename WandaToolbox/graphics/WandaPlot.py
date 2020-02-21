@@ -202,8 +202,6 @@ class PlotSyschar(PlotObject):
 
     Attributes:
         none.
-
-    Arguments
     """
 
     def __init__(self, component_name, max_flowrate, description, discharge_dataframe, supplier_column, scenario_names,
