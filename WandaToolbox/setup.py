@@ -11,11 +11,11 @@ setuptools.setup(
     description="Python toolbox for Wanda",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/MichielTukker/WandaToolbox",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: GPL v3",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
