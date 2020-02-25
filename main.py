@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
-
 import pandas as pd
 import pywanda as pw
+import numpy as np
 
-from WandaToolbox.graphics.WandaPlot import PlotSyschar, PlotText, plot
+from WandaToolbox.graphics.WandaPlot import PlotSyschar, PlotText, PlotTable, PlotImage, plot
 
 description_text = """
 Flow scenario 1: Flow rate at this industry from 0 to Future Maximum, other industries at Current Minimum 
@@ -24,12 +24,12 @@ Future Minimum or Future Maximum, the required pump head is obtained.
 
 
 if __name__ == '__main__':
-    df = pd.read_excel(r'c:\1_Projects\WandaTools\Wanda\flowrates.xlsx', header=0, index_col=0)
+    df = pd.read_excel(r'c:\1_Projects\WandaTools\data\flowrates.xlsx', header=0, index_col=0)
     df['Wanda_name'] = 'BOUNDQ ' + df['name']
     print(df)
 
     Industry_names = df['name'].tolist()
-    Industry_names_dbg = ['Ind_01-G', 'Ind_09-C', 'Ind_12']#, 'SecInd_A-D', 'SecInd_B-D']
+    Industry_names_dbg = ['Ind_01-G']#, 'Ind_09-C', 'Ind_12', 'SecInd_A-D', 'SecInd_B-D']
     model = pw.WandaModel(r'c:\1_Projects\WandaTools\Wanda\Jubail_IWW_Rev1.0_Syschar.wdi', 'c:\Program Files (x86)\Deltares\Wanda 4.6\Bin\\')
     model.reload_output()
     scenario_names = ["Current min"]#, "Current max", "Future min", "Future max"]
@@ -39,7 +39,26 @@ if __name__ == '__main__':
     try:
         with PdfPages(f'Appendix_A.pdf') as pdf:
             counter = 1
+
+            img = plt.imread('WandaToolbox\data\DELTARES_ENABLING_CMYK.png')
+            subplots_table = []
+            subplots_table.append(PlotTable(df, ['description', "Current min", "Current max", "Future min", "Future max"]))
+            subplots_table.append(PlotImage(img))
+
+            plot(model, subplots_table,
+                 'Discharge head for Industries',
+                 f'All flow scenarios',
+                 'flow rates',
+                 '11202658',
+                 'Appendix A',
+                 f'Fig A.{counter}',
+                 company_image=plt.imread('WandaToolbox\data\DELTARES_ENABLING_CMYK.png'),
+                 fontsize=10)
+            pdf.savefig()
+            plt.close()
+
             for name in Industry_names_dbg:
+                counter = counter + 1
                 i = Industry_names.index(name)
                 industry_description = df.iloc[i]['description']
                 max_flowrate = df.iloc[i]['syschar_flow']
@@ -58,7 +77,6 @@ if __name__ == '__main__':
                      f'Fig A.{counter}',
                      company_image=plt.imread('WandaToolbox\data\DELTARES_ENABLING_CMYK.png'),
                      fontsize=10)
-                counter = counter + 1
                 pdf.savefig()
                 plt.close()
     except Exception as e:

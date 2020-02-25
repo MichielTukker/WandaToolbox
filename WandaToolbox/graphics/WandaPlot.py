@@ -96,7 +96,6 @@ class PlotObject:
     PlotObject
     Base class for different types of plots
     """
-
     def __init__(self, title, xlabel, ylabel, xmin=None, xmax=None, xscale=1.0, ymin=None, ymax=None, yscale=1.0):
         self.title = title
         self.xlabel = xlabel
@@ -137,15 +136,12 @@ class PlotObject:
         # Plot the legend below the axes, and below the x-axis label.
         # We do this by shrinking the axes a little on the bottom.
         ax.legend()
-
         box = ax.get_position()
-
         height_shrink = 0.05
         ax.set_position([box.x0, box.y0 + height_shrink,
                          box.width, box.height - height_shrink])
-
-        ax.legend(loc='upper center', bbox_to_anchor=(0.5, -1 * height_shrink / box.height),
-                  fancybox=True, shadow=True, ncol=5, frameon=True)
+        # ax.legend(loc='upper center', bbox_to_anchor=(0.5, -1 * height_shrink / box.height),
+        #           fancybox=True, shadow=True, ncol=5, frameon=True)
 
     def plot(self, model, ax):
         raise NotImplementedError
@@ -271,17 +267,60 @@ class PlotText(PlotObject):
     PlotObject for Text
     Only supports a single axis.
     """
-
     def __init__(self, text, *args, **kwargs):
         self.text = text
         super().__init__(title='', xlabel='', ylabel='')
 
     def plot(self, model, ax):
         props = dict(boxstyle='round', facecolor='white', alpha=0.5)
-        ax.axis("off")
+        ax.set_axis_off()
+        if(ax.get_legend()):
+            ax.get_legend().remove()
         ax.text(-0.1, 1.0, self.text, transform=ax.transAxes, size=8, fontsize=9,
                 verticalalignment='top', bbox=props)
-        # ax.legend("off")
+        self._plot_finish(ax)
+
+
+class PlotTable(PlotObject):
+    """
+    PlotObject for Text
+    Only supports a single axis.
+    """
+    def __init__(self, dataframe, columns, *args, **kwargs):
+        self.df = dataframe
+        self.columns = columns
+        super().__init__(title='', xlabel='', ylabel='')
+
+    def plot(self, model, ax):
+        table = self.df[self.columns]
+        header = table.columns
+        table = np.asarray(table)
+        ax.set_axis_off()
+        if (ax.get_legend()):
+            ax.get_legend().remove()
+        colors = []
+        for x in header:
+            colors.append('grey')
+        tab = ax.table(cellText=table, colLabels=header, colColours=colors, cellLoc='center', loc='center')
+        tab.auto_set_column_width(True)
+        tab.auto_set_font_size(True)
+        self._plot_finish(ax)
+
+
+class PlotImage(PlotObject):
+    """
+    PlotObject for Text
+    Only supports a single axis.
+    """
+    def __init__(self, image, *args, **kwargs):
+        self.img = image
+        super().__init__(title='', xlabel='', ylabel='')
+
+    def plot(self, model, ax):
+        if (ax.get_legend()):
+            ax.get_legend().remove()
+        ax.set_axis_off()
+        ax.imshow(self.img)
         self._plot_finish(ax)
 
 

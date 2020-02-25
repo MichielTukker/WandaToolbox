@@ -134,6 +134,6 @@ def get_syschar(model, dataframe, component_name, max_flowrate, scenario, number
         model.reload_output()
         model_outputs.append(result_prop.get_scalar_float())
     print(' Done.')
-    if (len(model_inputs) != len(model_outputs)):
+    if len(model_inputs) != len(model_outputs):
         raise Exception('Length of lists should be equal')
     return model_inputs, model_outputs
