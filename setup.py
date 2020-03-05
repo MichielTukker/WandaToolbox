@@ -1,10 +1,10 @@
-import setuptools
+from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setuptools.setup(
-    name="WandaToolbox", # Replace with your own username
+setup(
+    name="wandatoolbox", # Replace with your own username
     version="0.0.1",
     author="Michiel Tukker",
     author_email="Michiel.Tukker@deltares.nl    ",
@@ -12,11 +12,35 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/MichielTukker/WandaToolbox",
-    packages=setuptools.find_packages(),
+
+    # packages=find_packages(),
+    packages=find_packages(where='src'),
+    package_dir={'':'src'},
     classifiers=[
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: GPL v3",
         "Operating System :: OS Independent",
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Intended Audience :: Information Technology",
+        "Topic :: Scientific/Engineering",
+        "Topic :: Scientific/Engineering :: Mathematics",
+        "Topic :: Scientific/Engineering :: Physics",
     ],
+    install_requires = [
+        "pywanda>=0.4.1",
+        "matplotlib>=3.1.3",
+        "numpy>=1.18.1"
+    ],
+
+    extras_require={
+        "dev": [
+            "pytest==5.3.5"
+        ]
+    },
     python_requires='>=3.6',
 )
