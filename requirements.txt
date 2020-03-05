@@ -1,6 +1,7 @@
 atomicwrites==1.3.0
 attrs==19.3.0
 bleach==3.1.1
+bump2version==1.0.0
 certifi==2019.11.28
 chardet==3.0.4
 colorama==0.4.3
@@ -33,6 +34,7 @@ six==1.14.0
 tqdm==4.43.0
 twine==3.1.1
 urllib3==1.25.8
+-e git+https://github.com/MichielTukker/WandaToolbox.git@c44fdd01af66458430e514420ab3fd8a652e2970#egg=wandatoolbox
 wcwidth==0.1.8
 webencodings==0.5.1
 xlrd==1.2.0
