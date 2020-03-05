@@ -1,4 +1,5 @@
 import unittest
+import wandatoolbox
 
 
 class WandaToolboxTestCase(unittest.TestCase):
