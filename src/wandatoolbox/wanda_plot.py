@@ -3,7 +3,7 @@ from typing import List, Tuple
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import numpy as np
-from WandaToolbox.util import get_min_max_pipe, get_min_max_pipe_relative, get_route_data, get_syschar
+from src.wandatoolbox.util import get_route_data, get_syschar
 
 
 def plot_7box(figure, title, case_title, case_description, proj_number, section_name, fig_name, company_name="Deltares",
@@ -85,16 +85,20 @@ def plot_7box(figure, title, case_title, case_description, proj_number, section_
                 verticalalignment='center', horizontalalignment='center',
                 color='black', fontsize=fontsize)
 
-    if company_image is not None:
-        imgax = figure.add_axes([v1, h0, v3 - v1, h3 - h0], zorder=-10)
-        imgax.imshow(company_image, alpha=0.3, interpolation='none')
-        imgax.axis('off')
+    img=company_image
+    if company_image is None:
+        import os
+        module_dir, module_filename = os.path.split(__file__)
+        image_path = os.path.join(module_dir, "image_data", "Deltares_logo.png")
+        img = plt.imread(image_path)
+    imgax = figure.add_axes([v1, h0, v3 - v1, h3 - h0], zorder=-10)
+    imgax.imshow(img, alpha=0.3, interpolation='none')
+    imgax.axis('off')
 
 
 class PlotObject:
     """
-    PlotObject
-    Base class for different types of plots
+    PlotObject, base class for different types of plots
     """
     def __init__(self, title, xlabel, ylabel, xmin=None, xmax=None, xscale=1.0, ymin=None, ymax=None, yscale=1.0):
         self.title = title
@@ -149,8 +153,8 @@ class PlotObject:
 
 class PlotRoute(PlotObject):
     """
-    PlotObject for Routeplots
-    Only supports a single property, but allows plotting of pipeline profile in same figure
+    creates a route plot or location-graph for a given route in a wanda model (route is specified by keyword. Only
+    supports a single property, but allows plotting of pipeline profile in same figure
     """
 
     def __init__(self, pipes, annotations, prop, times, *args, plot_elevation=False, **kwargs):
@@ -190,19 +194,14 @@ class PlotRoute(PlotObject):
 
 
 class PlotSyschar(PlotObject):
-    """PlotObject for system characteristics
-
-    This PlotObject allows for adding system characteristics in PDF appendices for reports. It automatically calculates
-    the system characteristic for a given model and flow scenarios.
-    Please see help(PlotSyschar.__init__)
-
-    Attributes:
-        none.
+    """Creates system characteristics graphs for given wanda model, flow scenarios and flow range. It automatically
+        calculates the system characteristic for a given model and flow scenarios.
     """
 
     def __init__(self, component_name, max_flowrate, description, discharge_dataframe, supplier_column, scenario_names,
                  number_of_points, *args, **kwargs):
-        """
+        """Creates system characteristics graphs for given wanda model, flow scenarios and flow range. It automatically
+        calculates the system characteristic for a given model and flow scenarios.
         :param component_name: Name of the component the calculate the system characteristic for
         :param max_flowrate: Maximum flowrate
         :param description: Text description of this component
@@ -241,8 +240,7 @@ class PlotSyschar(PlotObject):
 
 class PlotTimeseries(PlotObject):
     """
-    PlotObject for Time series
-    Only supports a single axis.
+    Creates a timeseries plot for a given property, only supports a single axis.
     """
 
     def __init__(self, collection=List[Tuple[str, str, str]], *args, **kwargs):
@@ -264,8 +262,7 @@ class PlotTimeseries(PlotObject):
 
 class PlotText(PlotObject):
     """
-    PlotObject for Text
-    Only supports a single axis.
+    Creates a textbox on the page. Formatting is up to the user
     """
     def __init__(self, text, *args, **kwargs):
         self.text = text
@@ -283,10 +280,15 @@ class PlotText(PlotObject):
 
 class PlotTable(PlotObject):
     """
-    PlotObject for Text
-    Only supports a single axis.
+    Creates a table on the subplot/page.
+    input is a Pandas dataframe
     """
     def __init__(self, dataframe, columns, *args, **kwargs):
+        """Creates a table on the subplot/page.
+
+        :param dataframe: Pandas dataframe containing the data
+        :param columns: list of column names to display in the table
+        """
         self.df = dataframe
         self.columns = columns
         super().__init__(title='', xlabel='', ylabel='')
@@ -309,10 +311,13 @@ class PlotTable(PlotObject):
 
 class PlotImage(PlotObject):
     """
-    PlotObject for Text
-    Only supports a single axis.
+    Adds an image on the subplot/page
     """
     def __init__(self, image, *args, **kwargs):
+        """Adds an image on the subplot/page
+
+        :param image: numpy.array containing the image,  for example from matplotlib.pyplot.imread()
+        """
         self.img = image
         super().__init__(title='', xlabel='', ylabel='')
 
@@ -325,6 +330,7 @@ class PlotImage(PlotObject):
 
 
 def plot(model, plot_objects, *args, **kwargs):
+    """Renders pages from the given set of subplots."""
     fig = plt.figure(figsize=(8.27, 11.69))
     plt.subplots_adjust(left=0.15, right=0.89, top=0.92, bottom=0.16, hspace=0.2 + (len(plot_objects) - 2) * 0.05)
 

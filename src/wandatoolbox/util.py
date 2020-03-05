@@ -84,17 +84,17 @@ def get_route_data(model, pipes, annotations, prop, times):
             data_list.append(data_array)
     data = np.vstack(data_list)
 
-    out = {}
+    output_location_series = {}
     for t in times:
         if isinstance(t, str) and t.lower().startswith('max'):
-            out[t] = np.max(data, axis=1)
+            output_location_series[t] = np.max(data, axis=1)
         elif isinstance(t, str) and t.lower().startswith('min'):
-            out[t] = np.min(data, axis=1)
+            output_location_series[t] = np.min(data, axis=1)
         else:
             ind = int(round(t / dt))
-            out[t] = data[:, ind].ravel()
+            output_location_series[t] = data[:, ind].ravel()
 
-    return s_location, elevation, out
+    return s_location, elevation, output_location_series
 
 
 def get_syschar(model, dataframe, component_name, max_flowrate, scenario, number_of_points=10,
@@ -137,3 +137,4 @@ def get_syschar(model, dataframe, component_name, max_flowrate, scenario, number
     if len(model_inputs) != len(model_outputs):
         raise Exception('Length of lists should be equal')
     return model_inputs, model_outputs
+
