@@ -165,7 +165,7 @@ class WandaMonteCarlo:
         self.inputs = input_parameters
         self.outputs = output_parameters
         self.n_runs = nruns
-        self.df = pd.DataFrame()
+        self.df = pd.DataFrame(columns=None)
         if (n_workers == None):
             self.n_workers = mp.cpu_count()
         else:
@@ -195,13 +195,12 @@ class WandaMonteCarlo:
             shutil.copyfile(case_path, dst)
             shutil.copytree(wanda_bin, os.path.join(self.work_directory, str(i), "bin"))
 
-        # worker(n_runs, case_name, cwd, parameters, outputs, 0)
         logger.debug("Starting workers...")
+        # all_results = worker(self.n_runs, case_name, self.work_directory, self.inputs, self.outputs, 0)
         pool = mp.Pool(self.n_workers)
-        output = [pool.apply_async(worker, args=(
-        self.n_runs, case_name, self.work_directory, self.inputs, self.outputs, worker_id))
-                  for worker_id in
-                  range(0, self.n_workers)]
+        output = [pool.apply_async(worker, args=(self.n_runs, case_name, self.work_directory,
+                                                 self.inputs, self.outputs, worker_id))
+                  for worker_id in range(0, self.n_workers)]
         pool.close()
         pool.join()
         logger.debug("workers have finished, generating output")
@@ -214,10 +213,8 @@ class WandaMonteCarlo:
                 self.outputs[i].results.append(res[i])
 
         for outp in self.outputs:
-            column_name = outp.comp_name + " " + self.prop_name
-            self.df[column_name] = pd.Series(outp.get_results(), index=self.df.index)
-
-        logger.debug(f"Output table: {self.df.shape()}")
+            column_name = outp.comp_name + " " + outp.prop_name + "_" + outp.extreme
+            self.df[column_name] = pd.Series(outp.get_results())
         logger.debug("Output is available!")
 
     def get_results(self):
@@ -236,7 +233,7 @@ class WandaMonteCarlo:
             axarr[2].plot([np.std(data[0:x]) for x in range(1, len(data))])
             axarr[2].set_xlabel('Number of runs')
             axarr[2].set_ylabel('Standard deviation of results')
-            dpi = f.get_dpi(self)
+            dpi = f.get_dpi()
             f.set_size_inches(width / dpi, height / dpi)
             plt.tight_layout()
             plt.savefig(filename_prefix + "_" + output.prop_name + "_" + output.extreme,
