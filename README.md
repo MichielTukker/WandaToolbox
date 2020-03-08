@@ -1,3 +1,5 @@
+![Python package](https://github.com/MichielTukker/WandaToolbox/workflows/Python%20package/badge.svg)
+
 # Wanda Toolbox
 Toolbox (python scripts) for Wanda modellers
 
