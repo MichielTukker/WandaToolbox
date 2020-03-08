@@ -28,4 +28,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main() # This is essential due to the way Python's multiprocessing module works
+    main()  # This main() method is essential due to the way Python's multiprocessing module works
