@@ -4,10 +4,10 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="wandatoolbox", # Replace with your own username
+    name="wandatoolbox",  # Replace with your own username
     version="0.0.3",
     author="Michiel Tukker",
-    author_email="Michiel.Tukker@deltares.nl    ",
+    author_email="Michiel.Tukker@deltares.nl",
     description="Python toolbox for Wanda",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -15,7 +15,7 @@ setup(
 
     # packages=find_packages(),
     packages=find_packages(where='src'),
-    package_dir={'':'src'},
+    package_dir={'': 'src'},
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
@@ -31,7 +31,7 @@ setup(
         "Topic :: Scientific/Engineering :: Mathematics",
         "Topic :: Scientific/Engineering :: Physics",
     ],
-    install_requires = [
+    install_requires=[
         "pywanda>=0.4.1",
         "matplotlib>=3.1.3",
         "numpy>=1.18.1"

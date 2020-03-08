@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 import pandas as pd
 import pywanda as pw
-import numpy as np
 
 from wandatoolbox.wanda_plot import PlotSyschar, PlotText, PlotTable, PlotImage, plot
 
@@ -27,19 +26,20 @@ if __name__ == '__main__':
     print(df)
 
     Industry_names = df['name'].tolist()
-    Industry_names_dbg = ['Ind_01-G']#, 'Ind_09-C', 'Ind_12', 'SecInd_A-D', 'SecInd_B-D']
-    model = pw.WandaModel(r'example_data\syschar_test.wdi', 'c:\Program Files (x86)\Deltares\Wanda 4.6\Bin\\')
+    Industry_names_dbg = ['Ind_01-G']  # , 'Ind_09-C', 'Ind_12', 'SecInd_A-D', 'SecInd_B-D']
+    model = pw.WandaModel(r'example_data\syschar_test.wdi', r'c:\Program Files (x86)\Deltares\Wanda 4.6\Bin\\')
     model.reload_output()
-    scenario_names = ["Current min"]#, "Current max", "Future min", "Future max"]
-    img = plt.imread('example_data\Wanda_init.png')
+    scenario_names = ["Current min"]  # , "Current max", "Future min", "Future max"]
+    img = plt.imread(r'example_data\Wanda_init.png')
 
     try:
         with PdfPages(f'Document.pdf') as pdf:
             counter = 1
 
-            subplots_table = []
-            subplots_table.append(PlotTable(df, ['description', "Current min", "Current max", "Future min", "Future max"]))
-            subplots_table.append(PlotImage(img))
+            subplots_table = [
+                PlotTable(df, ['description', "Current min", "Current max", "Future min", "Future max"]),
+                PlotImage(img)
+            ]
             plot(model, subplots_table,
                  'Discharge head for Suppliers',
                  f'All flow scenarios',
@@ -59,10 +59,11 @@ if __name__ == '__main__':
                 max_flowrate = df.iloc[i]['syschar_flow']
                 component_name = df.iloc[i]['Wanda_name']
 
-                subplots = []
-                subplots.append(PlotSyschar(component_name, max_flowrate, industry_description, df, 'Wanda_name',
-                                            scenario_names, 3, industry_description,'Discharge (m3/day)', 'Head (m)'))
-                subplots.append( PlotText(description_text) )
+                subplots = [
+                    PlotSyschar(component_name, max_flowrate, industry_description, df, 'Wanda_name',
+                                scenario_names, 3, industry_description, 'Discharge (m3/day)', 'Head (m)'),
+                    PlotText(description_text)
+                ]
                 plot(model, subplots,
                      'Discharge head for suppliers',
                      f'All flow scenarios',
@@ -77,9 +78,7 @@ if __name__ == '__main__':
                 plt.close()
     except Exception as e:
         raise
-        #print(e)
+        # print(e)
         model.close()
 
     model.close()
-
-
