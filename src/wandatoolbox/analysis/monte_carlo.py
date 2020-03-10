@@ -166,11 +166,11 @@ class WandaMonteCarlo:
         self.outputs = output_parameters
         self.n_runs = nruns
         self.df = pd.DataFrame(columns=None)
-        if (n_workers == None):
+        if n_workers is None:
             self.n_workers = mp.cpu_count()
         else:
             self.n_workers = n_workers
-        if work_directory == None:
+        if work_directory is None:
             self.work_directory = os.getcwd()
         else:
             if not os.path.isdir(work_directory):
@@ -182,7 +182,7 @@ class WandaMonteCarlo:
         # Todo Logging
 
         logger = logging.getLogger(__name__)
-        if n_workers != None:
+        if n_workers is not None:
             self.n_workers = n_workers
         case_path = self.wanda_model.get_case_path()
         wanda_bin = self.wanda_model.get_wandabin()

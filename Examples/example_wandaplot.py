@@ -77,8 +77,8 @@ if __name__ == '__main__':
                 pdf.savefig()
                 plt.close()
     except Exception as e:
-        raise
-        # print(e)
+        print(e)
         model.close()
+        raise
 
     model.close()

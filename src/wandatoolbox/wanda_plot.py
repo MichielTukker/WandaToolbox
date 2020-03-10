@@ -85,7 +85,7 @@ def plot_7box(figure, title, case_title, case_description, proj_number, section_
                 verticalalignment='center', horizontalalignment='center',
                 color='black', fontsize=fontsize)
 
-    img=company_image
+    img = company_image
     if company_image is None:
         import os
         module_dir, module_filename = os.path.split(__file__)
@@ -222,7 +222,7 @@ class PlotSyschar(PlotObject):
 
     def plot(self, model, ax):
         color_ind = 0
-        suppliers = self.discharge_dataframe[self.supplier_column].tolist()
+        # suppliers = self.discharge_dataframe[self.supplier_column].tolist()
         flows = {}
         head_series = {}
         for scenario in self.scenario_names:
