@@ -1,6 +1,7 @@
 import unittest
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
+import numpy as np
 import pandas as pd
 import pywanda as pw
 from wandatoolbox.wanda_plot import PlotSyschar, PlotText, PlotTable, PlotImage, plot
@@ -34,6 +35,27 @@ class TestWandaPlot(unittest.TestCase):
             counter = 1
 
             subplots_table = [PlotImage(img)]
+            plot(model, subplots_table,
+                 'Discharge head for Suppliers',
+                 f'All flow scenarios',
+                 'flow rates',
+                 '1120XXXX',
+                 'Appendix A',
+                 f'Fig A.{counter}',
+                 company_image=None,
+                 fontsize=10)
+            pdf.savefig()
+            plt.close()
+
+    def test_wandaplot_table(self):
+        model = pw.WandaModel(r'..\Examples\example_data\syschar_test.wdi',
+                              r'c:\Program Files (x86)\Deltares\Wanda 4.6\Bin\\')
+        df = pd.DataFrame(np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
+                   columns=['a', 'b', 'c'])
+        with PdfPages(f'test_wandaplotimage.pdf') as pdf:
+            counter = 1
+
+            subplots_table = [PlotTable(df, df.columns)]
             plot(model, subplots_table,
                  'Discharge head for Suppliers',
                  f'All flow scenarios',
