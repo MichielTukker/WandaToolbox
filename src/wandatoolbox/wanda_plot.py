@@ -3,7 +3,8 @@ from typing import List, Tuple
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import numpy as np
-from src.wandatoolbox.util import get_route_data, get_syschar
+
+from .util import get_route_data, get_syschar
 
 
 def plot_7box(figure, title, case_title, case_description, proj_number, section_name, fig_name, company_name="Deltares",

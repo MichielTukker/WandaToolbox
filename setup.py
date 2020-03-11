@@ -34,6 +34,7 @@ setup(
     install_requires=[
         "pywanda>=0.4.1",
         "matplotlib>=3.1.3",
+        "pandas>=1.0.1",
         "numpy>=1.18.1"
     ],
 
