@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="wandatoolbox",  # Replace with your own username
-    version="0.0.3",
+    version="0.0.4",
     author="Michiel Tukker",
     author_email="Michiel.Tukker@deltares.nl",
     description="Python toolbox for Wanda",
