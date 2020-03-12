@@ -51,8 +51,8 @@ class TestWandaPlot(unittest.TestCase):
         model = pw.WandaModel(r'..\Examples\example_data\syschar_test.wdi',
                               r'c:\Program Files (x86)\Deltares\Wanda 4.6\Bin\\')
         df = pd.DataFrame(np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
-                   columns=['a', 'b', 'c'])
-        with PdfPages(f'test_wandaplotimage.pdf') as pdf:
+                   columns=['Aaa', 'Bbb', 'Ccc'])
+        with PdfPages(f'test_wandaplottable.pdf') as pdf:
             counter = 1
 
             subplots_table = [PlotTable(df, df.columns)]

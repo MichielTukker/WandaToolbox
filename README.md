@@ -1,5 +1,5 @@
 ![Python package](https://github.com/MichielTukker/WandaToolbox/workflows/Python%20package/badge.svg)
-
+(Tests will fail on Github actions due to license check in pywanda)
 # Wanda Toolbox
 Toolbox (python scripts) for Wanda modellers
 
