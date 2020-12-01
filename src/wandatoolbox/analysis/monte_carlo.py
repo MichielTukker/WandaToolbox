@@ -123,7 +123,7 @@ class MonteCarloOutputProperty:
 
 def worker(n_runs, wandacase, working_directory, parameters, outputs, worker_id):
     # Every process gets its own Wandacase and Wandabin
-    wancacase_directory, casename = os.path.split(wandacase)
+    wandacase_directory, casename = os.path.split(wandacase)
     dst = os.path.join(working_directory, str(worker_id), casename)
     wandabin = os.path.join(working_directory, str(worker_id), "bin")
     model = pw.WandaModel(str(dst), str(wandabin + "\\"))

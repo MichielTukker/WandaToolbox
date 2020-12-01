@@ -267,7 +267,8 @@ class PlotText(PlotObject):
     """
     def __init__(self, text, *args, **kwargs):
         self.text = text
-        super().__init__(title='', xlabel='', ylabel='')
+        #super().__init__(title='', xlabel='', ylabel='')
+        super().__init__(*args, **kwargs)
 
     def plot(self, model, ax):
         props = dict(boxstyle='round', facecolor='white', alpha=0.5)
@@ -292,7 +293,8 @@ class PlotTable(PlotObject):
         """
         self.df = dataframe
         self.columns = columns
-        super().__init__(title='', xlabel='', ylabel='')
+        # super().__init__(title='', xlabel='', ylabel='')
+        super().__init__(*args, **kwargs)
 
     def plot(self, model, ax):
         table = self.df[self.columns]
