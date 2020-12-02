@@ -127,3 +127,6 @@ dmypy.json
 #pycharm
 .idea
 *.pdf
+
+#vscode
+.vscode
