@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from wandatoolbox.wanda_plot import PlotSyschar, PlotText, PlotTable, PlotImage, plot
 
-mocker.patch('pywanda.WandaModel')
+mocker.patch('pw.WandaModel')
 
 class TestWandaPlot(unittest.TestCase):
     def test_wandaplot_text(self):
