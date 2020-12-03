@@ -4,7 +4,7 @@ import pandas as pd
 import pywanda as pw
 import sys
 sys.path.append('../')
-from src.wandatoolbox.wanda_plot import PlotSyschar, PlotText, PlotTable, PlotImage, plot
+from wandatoolbox.wanda_plot import PlotSyschar, PlotText, PlotTable, PlotImage, plot
 
 description_text = """
 Flow scenario 1: Flow rate at this supplier from 0 to Future Maximum, other suppliers at Current Minimum 
@@ -22,15 +22,14 @@ Future Minimum or Future Maximum, the required pump head is obtained.
 """
 
 if __name__ == '__main__':
-    #df = pd.read_excel(r'example_data\syschar_test.xlsx', header=0, index_col=0)
-    #df['Wanda_name'] = 'BOUNDQ ' + df['name']
-    #print(df)
+    df = pd.read_excel(r'example_data\syschar_test.xlsx', header=0, index_col=0)
+    df['Wanda_name'] = 'BOUNDQ ' + df['name']
+    print(df)
 
-    #Industry_names = df['name'].tolist()
-    Industry_names_dbg = [] #  ['Ind_01-G']  # , 'Ind_09-C', 'Ind_12', 'SecInd_A-D', 'SecInd_B-D']
+    Industry_names = df['name'].tolist()
     model = pw.WandaModel(r'example_data\syschar_test.wdi', r'c:\Program Files (x86)\Deltares\Wanda 4.6\Bin\\')
     model.reload_output()
-    scenario_names = ["Current min"]  # , "Current max", "Future min", "Future max"]
+    scenario_names = ["Current min", "Current max", "Future min", "Future max"]
     img = plt.imread(r'example_data\Wanda_init.png')
 
     try:
@@ -53,7 +52,7 @@ if __name__ == '__main__':
             pdf.savefig()
             plt.close()
 
-            for name in Industry_names_dbg:
+            for name in Industry_names:
                 counter = counter + 1
                 i = Industry_names.index(name)
                 industry_description = df.iloc[i]['description']
