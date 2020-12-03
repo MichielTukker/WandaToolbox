@@ -18,7 +18,16 @@ import logging
 
 class MonteCarloInputProperty:
     def __init__(self, comp_name, prop_name, min_val=0.0, max_val=0.0, dist_type="Empty", keyword=False):
-        self.wanda_prop = []
+        """[summary]
+
+        Args:
+            comp_name ([type]): [description]
+            prop_name ([type]): [description]
+            min_val (float, optional): [description]. Defaults to 0.0.
+            max_val (float, optional): [description]. Defaults to 0.0.
+            dist_type (str, optional): [description]. Defaults to "Empty".
+            keyword (bool, optional): [description]. Defaults to False.
+        """        self.wanda_prop = []
         self.prop_name = prop_name
         self.comp_name = comp_name
         self.min_val = min_val
