@@ -267,8 +267,7 @@ class PlotText(PlotObject):
     """
     def __init__(self, text, *args, **kwargs):
         self.text = text
-        #super().__init__(title='', xlabel='', ylabel='')
-        super().__init__(*args, **kwargs)
+        super().__init__(title='', xlabel='', ylabel='', *args, **kwargs)
 
     def plot(self, model, ax):
         props = dict(boxstyle='round', facecolor='white', alpha=0.5)
@@ -293,8 +292,7 @@ class PlotTable(PlotObject):
         """
         self.df = dataframe
         self.columns = columns
-        # super().__init__(title='', xlabel='', ylabel='')
-        super().__init__(*args, **kwargs)
+        super().__init__(title='', xlabel='', ylabel='', *args, **kwargs)
 
     def plot(self, model, ax):
         table = self.df[self.columns]
@@ -322,7 +320,7 @@ class PlotImage(PlotObject):
         :param image: numpy.array containing the image,  for example from matplotlib.pyplot.imread()
         """
         self.img = image
-        super().__init__(title='', xlabel='', ylabel='')
+        super().__init__(title='', xlabel='', ylabel='', *args, **kwargs)
 
     def plot(self, model, ax):
         if (ax.get_legend()):
