@@ -33,8 +33,11 @@ release = '0.0.4'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
-    'recommonmark',
+    # 'recommonmark',
+    'm2r2',
 ]
+
+source_suffix = ['.rst', '.md']
 
 napoleon_google_docstring = False
 napoleon_use_param = False
