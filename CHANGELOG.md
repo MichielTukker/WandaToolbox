@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added Dashboard example [@samvanderzwan](https://github.com/samvanderzwan).
 - Added test for wandaplot_table()
+- sphinx documentation
 
 ### Changed
 - changed unit-test to use mocked pywanda objects

@@ -10,6 +10,7 @@ Welcome to WandaToolbox's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   members
    readme
    changelog
 
