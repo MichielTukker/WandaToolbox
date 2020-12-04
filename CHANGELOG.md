@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Set github actions for publishing packages automatically
 
-## [0.0.5] - 2020-12-03
+## [## [Unreleased]] - 2020-12-03
 ### Added
 - Added Dashboard example [@samvanderzwan](https://github.com/samvanderzwan).
 - Added test for wandaplot_table()
