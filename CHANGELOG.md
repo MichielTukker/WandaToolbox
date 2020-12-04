@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
-## [0.0.5]
+## [0.0.5] - 2020-12-03
 ### Added
 - Added Dashboard example [@samvanderzwan](https://github.com/samvanderzwan).
 - Added test for wandaplot_table()
