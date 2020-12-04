@@ -3,16 +3,39 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to WandaToolbox's documentation!
+WandaToolbox documentation!
 ========================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+.. include:: readme.rst
 
-   members
-   readme
+
+Contents
+============
+.. toctree::
+   :maxdepth: 1
+
    changelog
+   contributing
+
+   
+.. toctree::
+   :caption: The Basics
+   :maxdepth: 1
+
+   figures
+   paramterscript
+   miscellaneous
+
+
+.. toctree::
+   :caption: Advanced Topics
+   :maxdepth: 1
+
+   advanced/analysis
+   advanced/callibration
+   advanced/optimization
+   
+
 
 
 Indices and tables
