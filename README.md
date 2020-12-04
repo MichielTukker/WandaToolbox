@@ -8,9 +8,11 @@ running simulations.
 
 ## Installation
 Run the following to install this package:
-```shell script
+
+```
 pip install WandaToolbox
 ```
+
 Also see: https://pypi.org/project/wandatoolbox/
 
 ## Usage
