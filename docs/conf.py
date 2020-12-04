@@ -22,7 +22,7 @@ copyright = '2020, Michiel Tukker, Sam van der Zwan'
 author = 'Michiel Tukker, Sam van der Zwan'
 
 # The full version, including alpha/beta/rc tags
-0.0.5
+release = '0.0.5'
 
 
 # -- General configuration ---------------------------------------------------
