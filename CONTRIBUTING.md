@@ -41,3 +41,22 @@ git push origin <branch> --tags
 ```
 The Github Actions have been configured to run the tests and flake8 linting and publish to test.Pypi 
 on every push. If a commit is also tagged it will also publish to Pypi. 
+
+## Development roadmap (Todo)
+functionality for first official release:
+- [x] syschar plot implementation
+- [x] image plot implementation
+- [x] text plot implementation
+- [x] table plot implementation
+- [x] Monte-carlo scripts
+- [ ] unit testing
+- [ ] tox testing
+- [ ] Goal seek algorithm
+- [ ] parameter script read input, run,read output
+- [ ] calibration routine (goalseek?) for scalar, multiple scalar, timeseries
+- [ ] calibration for multiple parameters? 
+- [ ] Simple optimization (1 parameter, 1 output?)
+- [ ] Valve characteristic creation and data import in Wanda
+- [ ] Pump characteristic creation and data import in Wanda
+- [ ] Epanet scripts and skeletonizer functions
+- [ ] Any other future developments ??
