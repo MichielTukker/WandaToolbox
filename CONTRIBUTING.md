@@ -15,11 +15,13 @@ You can install the WandaToolbox package as follows:
 ```
 pip install wandatoolbox 
 ```
+Note that not all dependencies are installed by default,  check requirements.txt
 
 ## Development installation and testing
 
 For development you can use the 'editable' installation:
 ```
+pip install -r requirements.txt
 pip install -e . 
 pytest
 ```
@@ -38,6 +40,7 @@ We use bump2version to update the version numbers. Bump2version will also create
 changes.  This can then be pushed using
 ```
 cd <root of project>
+pip install bump2version
 bump2version <major|minor|patch>
 git push origin <branch> --tags
 ```
