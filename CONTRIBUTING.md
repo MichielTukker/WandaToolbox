@@ -37,6 +37,8 @@ python setup.py sdist bdist_wheel
 We use bump2version to update the version numbers. Bump2version will also create a tag and commit the 
 changes.  This can then be pushed using
 ```
+cd <root of project>
+bump2version <major|minor|patch>
 git push origin <branch> --tags
 ```
 The Github Actions have been configured to run the tests and flake8 linting and publish to test.Pypi 
