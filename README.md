@@ -1,4 +1,4 @@
-![Python package](https://github.com/MichielTukker/WandaToolbox/workflows/Python%20package/badge.svg)
+![Build and Test](https://github.com/MichielTukker/WandaToolbox/workflows/Build%20and%20Test/badge.svg)
 ![Upload Python Package](https://github.com/MichielTukker/WandaToolbox/workflows/Upload%20Python%20Package/badge.svg)
 [![Documentation Status](https://readthedocs.org/projects/wandatoolbox/badge/?version=latest)](https://wandatoolbox.readthedocs.io/en/latest/?badge=latest)
 
