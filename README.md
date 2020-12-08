@@ -1,6 +1,6 @@
 ![Build and Test](https://github.com/MichielTukker/WandaToolbox/workflows/Build%20and%20Test/badge.svg)
 ![Upload Python Package](https://github.com/MichielTukker/WandaToolbox/workflows/Upload%20Python%20Package/badge.svg)
-![[Documentation Status](https://readthedocs.org/projects/wandatoolbox/badge/?version=latest)
+![Documentation Status](https://readthedocs.org/projects/wandatoolbox/badge/?version=latest)
 ![Pypi](https://img.shields.io/pypi/v/wandatoolbox)
 ![Github release](https://img.shields.io/github/v/release/michieltukker/wandatoolbox)
 
