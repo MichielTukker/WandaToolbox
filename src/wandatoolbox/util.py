@@ -46,6 +46,7 @@ def get_route_data(model, pipes, annotations, prop, times):
     can use a single source of x-axis data."""
 
     s_locations = []
+    s_location_profile = []
     elevations = []
 
     pipes = pipes.copy()
@@ -59,14 +60,18 @@ def get_route_data(model, pipes, annotations, prop, times):
         s_dist_pipe = np.linspace(profile_data_s_h[0, 0], profile_data_s_h[-1, 0], p.get_num_elements() + 1)
 
         if (annotations[pipes.index(p)] == -1):
-            elevations.append(np.flipud(np.interp(s_dist_pipe, profile_data_s_h[:, 0], profile_data_s_h[:, 1])))
+            #elevations.append(np.flipud(np.interp(s_dist_pipe, profile_data_s_h[:, 0], profile_data_s_h[:, 1])))
+            elevations.append(np.flipud(profile_data_s_h[:, 1]))
         else:
-            elevations.append(np.interp(s_dist_pipe, profile_data_s_h[:, 0], profile_data_s_h[:, 1]))
+            #elevations.append(np.interp(s_dist_pipe, profile_data_s_h[:, 0], profile_data_s_h[:, 1]))
+            elevations.append(profile_data_s_h[:, 1])
 
         offset = s_locations[-1][-1] if s_locations else 0.0
         s_locations.append(s_dist_pipe + offset)
+        s_location_profile.append(profile_data_s_h[:, 0] + offset)
 
     s_location = np.hstack(s_locations)
+    s_location_profile = np.hstack(s_location_profile)
     elevation = np.hstack(elevations)
 
     dt = np.average(np.diff(model.get_time_steps()))
@@ -77,7 +82,8 @@ def get_route_data(model, pipes, annotations, prop, times):
     data_list = []
     for p in pipes:
         direction = annotations[pipes.index(p)]
-        data_array = np.array(p.get_property(prop).get_series_pipe())
+        wanda_prop = p.get_property(prop)
+        data_array = np.array(wanda_prop.get_series_pipe()) * wanda_prop.get_unit_factor()
         if (direction == -1):
             data_list.append(np.flipud(data_array))
         else:
@@ -94,7 +100,7 @@ def get_route_data(model, pipes, annotations, prop, times):
             ind = int(round(t / dt))
             output_location_series[t] = data[:, ind].ravel()
 
-    return s_location, elevation, output_location_series
+    return s_location, elevation, output_location_series, s_location_profile
 
 
 def get_syschar(model, dataframe, component_name, max_flowrate, scenario, number_of_points=10,
