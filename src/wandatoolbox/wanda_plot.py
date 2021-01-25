@@ -311,14 +311,12 @@ class PlotTable(PlotObject):
 
 
 class PlotImage(PlotObject):
-    """
-    Adds an image on the subplot/page
-    """
     def __init__(self, image, *args, **kwargs):
         """Adds an image on the subplot/page
 
-        :param image: numpy.array containing the image,  for example from matplotlib.pyplot.imread()
-        """
+        Args:
+            image (numpy.array): numpy.array containing the image,  for example from matplotlib.pyplot.imread()
+        """        
         self.img = image
         super().__init__(title='', xlabel='', ylabel='', *args, **kwargs)
 
@@ -331,7 +329,12 @@ class PlotImage(PlotObject):
 
 
 def plot(model, plot_objects, *args, **kwargs):
-    """Renders pages from the given set of subplots."""
+    """Renders pages from the given set of subplots.
+
+    Args:
+        model ([type]): Wanda model used as input
+        plot_objects ([type]): List of objects to plot for the current page
+    """    
     fig = plt.figure(figsize=(8.27, 11.69))
     plt.subplots_adjust(left=0.15, right=0.89, top=0.92, bottom=0.16, hspace=0.2 + (len(plot_objects) - 2) * 0.05)
 
