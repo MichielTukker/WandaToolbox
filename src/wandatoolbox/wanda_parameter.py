@@ -117,6 +117,7 @@ class WandaParameter:
             return wanda_item.get_property(self.wanda_property)
         elif self.wanda_property.lower() == "Disuse".lower():
             return wanda_item.set_disused
+        #raise Exception(self.wanda_property + " not in " + wanda_item.get_complete_name_spec())
 
     def get_properties(self, model):
         properties = []
@@ -131,7 +132,9 @@ class WandaParameter:
                         properties.append(prop)
             elif model.component_exists(self.wanda_component):
                 comp = model.get_component(self.wanda_component)
-                properties.append(self.get_wanda_property(comp))
+                prop = self.get_wanda_property(comp)
+                if prop is not None:
+                    properties.append(prop)
 
             nodes = model.get_nodes_with_keyword(self.wanda_component)
             if len(nodes) != 0:
@@ -139,7 +142,9 @@ class WandaParameter:
                     properties.append(self.get_wanda_property(node))
             elif model.node_exists(self.wanda_component):
                 node = model.get_node(self.wanda_component)
-                properties.append(self.get_wanda_property(node))
+                prop = self.get_wanda_property(node)
+                if prop is not None:
+                    properties.append(prop)
 
             sig_lines = model.get_signal_lines_with_keyword(self.wanda_component)
             if len(sig_lines) != 0:
@@ -148,6 +153,8 @@ class WandaParameter:
             elif model.sig_line_exists(self.wanda_component):
                 sig_line = model.get_signal_line(self.wanda_component)
                 properties.append(self.get_wanda_property(sig_line))
+        if not properties:
+            raise Exception(self.wanda_property + " does not exist for " + self.wanda_component)
         return properties
 
     def get_result_extreme(self, model):
@@ -176,8 +183,9 @@ class WandaParameter:
             if self.output == "Series":
                 wanda_properties = self.get_properties(model)
                 for wanda_property in wanda_properties:
-                    series = [x * wanda_property.get_unit_factor() for x in wanda_property.get_series()]
-                    self.result.append(series)
+                    if wanda_property is not None:
+                        series = [x * wanda_property.get_unit_factor() for x in wanda_property.get_series()]
+                        self.result.append(series)
         return self.result
 
     def create_graphs(self, model):
@@ -432,36 +440,38 @@ class WandaParameterScript:
 
 
 def main(scenario, only_output):
-    config_file_list = []
-    if (scenario == 'Phase 1a') or (scenario == 'All'):
-        config_file_list.append(r'd:\akzo\model\V4\Sim_1A\config.yml')
-    elif (scenario == 'Phase 1b') or (scenario == 'All'):
-        config_file_list.append(r'd:\akzo\model\V4\Sim_1B\config.yml')
-    elif (scenario == 'Phase 2') or (scenario == 'All'):
-        config_file_list.append(r'd:\akzo\model\V4\Sim_2\config.yml')
-    elif (scenario == 'Phase 3') or (scenario == 'All'):
-        config_file_list.append(r'd:\akzo\model\V4\Sim_3\config.yml')
-    elif scenario == 'Steady':
-        config_file_list.append(r'd:\akzo\model\V4\config.yml')
-    else:
-        raise Exception(scenario + ' not recognized')
+    #
+    #config_file_list = []
+    #if (scenario == 'Phase 1a') or (scenario == 'All'):
+    #    config_file_list.append(r'd:\akzo\model\V4\Sim_1A\config.yml')
+    #elif (scenario == 'Phase 1b') or (scenario == 'All'):
+    #    config_file_list.append(r'd:\akzo\model\V4\Sim_1B\config.yml')
+    #elif (scenario == 'Phase 2') or (scenario == 'All'):
+    #    config_file_list.append(r'd:\akzo\model\V4\Sim_2\config.yml')
+    #elif (scenario == 'Phase 3') or (scenario == 'All'):
+    #    config_file_list.append(r'd:\akzo\model\V4\Sim_3\config.yml')
+    #elif scenario == 'Steady':
+    #    config_file_list.append(r'd:\akzo\model\V4\config.yml')
+    #else:
+    #    raise Exception(scenario + ' not recognized')
 
-    for config_file in config_file_list:
-        with open(config_file, 'r') as ymlfile:
-            cfg = yaml.load(ymlfile, Loader=yaml.SafeLoader)
+    #for config_file in config_file_list:
+    config_file = r'd:\cowi\config.yml'
+    with open(config_file, 'r') as ymlfile:
+        cfg = yaml.load(ymlfile, Loader=yaml.SafeLoader)
 
-        wanda_bin = cfg['General']['Wanda-bin-directory']
-        wanda_model = cfg['parameterscript']['wanda-model']
-        excel_file = cfg['parameterscript']['excel_sheet']
-        nop = cfg['General']['number_of_processes']
-        para = WandaParameterScript(wanda_model, wanda_bin, excel_file, only_output)
-        para.parse_excel_file()
-        #para.scenarios[-4].run_scenario()
-        para.run_scenarios(nop)
+    wanda_bin = cfg['General']['Wanda-bin-directory']
+    wanda_model = cfg['parameterscript']['wanda-model']
+    excel_file = cfg['parameterscript']['excel_sheet']
+    nop = cfg['General']['number_of_processes']
+    para = WandaParameterScript(wanda_model, wanda_bin, excel_file, only_output)
+    para.parse_excel_file()
+    para.scenarios[0].run_scenario()
+    #para.run_scenarios(nop)
 
 
 if __name__ == '__main__':
     scenario = 'Steady'
-    only_output = True
+    only_output = False
 
     main(scenario, only_output)
