@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import numpy as np
 
-from .util import get_route_data, get_syschar
+from util import get_route_data, get_syschar
 
 
 def plot_7box(figure, title, case_title, case_description, proj_number, section_name, fig_name, company_name="Deltares",
-              software_version="Wanda 4.6", company_image=None,
-              fontsize=12):
+              software_version="Wanda 4.6", company_image=None, date=None,
+              fontsize=8):
     """
     Creates box around and in the plot window. Also fills in some info about the calculation.
     Based on the 7-box WL-layout.
@@ -60,7 +60,7 @@ def plot_7box(figure, title, case_title, case_description, proj_number, section_
                 color='black', fontsize=fontsize)
 
     # Project number
-    figure.text((v1 + (v2 - v1) / 2.), (h0 + (h1 - h0) / 2.), proj_number,
+    figure.text((v1 + (v2 - v1) / 2.), (h0 + (h1 - h0) / 2.), int(proj_number),
                 verticalalignment='center', horizontalalignment='center',
                 color='black', fontsize=fontsize)
 
@@ -70,13 +70,15 @@ def plot_7box(figure, title, case_title, case_description, proj_number, section_
                 color='black', fontsize=fontsize)
 
     # Create datestamp
-    today = datetime.date(datetime.now())
+    if date != date or date is None:
+        today = datetime.date(datetime.now())
+    else:
+        today = date
     figure.text((v2 + (v3 - v2) / 2.), h2 + (h3 - h2) / 2., today.strftime('%d-%m-%Y'),
                 verticalalignment='center', horizontalalignment='center',
                 color='black', fontsize=fontsize)
 
     # Figure name
-    today = datetime.date(datetime.now())
     figure.text((v2 + (v3 - v2) / 2.), (h0 + (h1 - h0) / 2.), fig_name,
                 verticalalignment='center', horizontalalignment='center',
                 color='black', fontsize=fontsize)
@@ -123,7 +125,11 @@ class PlotObject:
 
         xmin, xmax = np.array(ax.get_xlim()) / self.xscale
         ymin, ymax = np.array(ax.get_ylim()) / self.yscale
-
+        if (ymax - ymin) < 1:#
+            ymin = np.sign(ymin) * abs(ymin) * 0.9
+            ymax = np.sign(ymax) * abs(ymax) * 1.1
+            if ymax < 1:#
+                ymax = 100
         xmin = self.xmin if self.xmin is not None else xmin
         xmax = self.xmax if self.xmax is not None else xmax
         ymin = self.ymin if self.ymin is not None else ymin
@@ -145,8 +151,8 @@ class PlotObject:
         height_shrink = 0.05
         ax.set_position([box.x0, box.y0 + height_shrink,
                          box.width, box.height - height_shrink])
-        # ax.legend(loc='upper center', bbox_to_anchor=(0.5, -1 * height_shrink / box.height),
-        #           fancybox=True, shadow=True, ncol=5, frameon=True)
+        ax.legend(loc='upper center', bbox_to_anchor=(0.5, -1 * height_shrink / box.height),
+                   fancybox=True, shadow=True, ncol=5, frameon=True)
 
     def plot(self, model, ax):
         raise NotImplementedError
@@ -158,7 +164,7 @@ class PlotRoute(PlotObject):
     supports a single property, but allows plotting of pipeline profile in same figure
     """
 
-    def __init__(self, pipes, annotations, prop, times, *args, plot_elevation=False, **kwargs):
+    def __init__(self, pipes, annotations, prop, times, *args, plot_elevation=False, plot_text=[], **kwargs):
         if (len(pipes) != len(annotations)):
             raise ValueError('Pipes list and Annotations list must have the same length')
         self.pipes = pipes
@@ -166,31 +172,47 @@ class PlotRoute(PlotObject):
         self.prop = prop
         self.times = times
         self.plot_elevation = plot_elevation
+        self.plot_text = plot_text
         super().__init__(*args, **kwargs)
 
     def plot(self, model, ax):
-        s_location, elevation, data = get_route_data(model, self.pipes, self.annotations, self.prop, self.times)
+        s_location, elevation, data, s_location_profile = get_route_data(model, self.pipes, self.annotations, self.prop, self.times)
+
 
         color_ind = 0
         for t, v in data.items():
             # Min/max keep their name, but floats get a 's' unit appended
-
-            if t == 0:
-                label = f'{self.prop}' if not isinstance(t, str) else t
-            else:
-                label = f'{t} s' if not isinstance(t, str) else t
+            if self.prop == 'Velocity' or self.prop == 'Discharge':
+                v = abs(v)
+            #if t == 0:
+            #    label = f'{self.prop}' if not isinstance(t, str) else t
+            #else:
+            #    label = f'{t} s' if not isinstance(t, str) else t
+            label = f'{t} s' if not isinstance(t, str) else t
 
             if label == "max":
                 ax.plot(s_location, v, label=label, linestyle='--', c='r', zorder=-1)
             elif label == "min":
-                ax.plot(s_location, v, label=label, linestyle='--', c='k', zorder=-1)
+                ax.plot(s_location, v, label=label, linestyle='-.', c='k', zorder=-1)
             else:
                 ax.plot(s_location, v, label=label, c=f'C{color_ind}')
                 color_ind += 1
 
         if self.plot_elevation:
-            ax.plot(s_location, elevation, label='Elevation', c='g', linewidth=2, alpha=0.3, zorder=-2)
-
+            ax.plot(s_location_profile, elevation, label='Elevation', c='g', linewidth=2, alpha=0.3, zorder=-2)
+        # adding text and points to the graphs
+        if self.plot_text:
+            for text in self.plot_text:
+                ax.plot(text[0], text[1], 'ro')
+                ax.text(text[0] + text[2], text[1] + text[3], text[4])
+        if True:
+            #ax.plot(text[0], text[1], 'ro')
+            xmin, xmax = np.array(ax.get_xlim()) / self.xscale
+            ymin, ymax = np.array(ax.get_ylim()) / self.yscale
+            stepx = (xmax - xmin) * 0.05
+            stepy = (ymax - ymin) * 0.05
+            ax.text(xmin + stepx, ymin + stepy, self.pipes[0].get_complete_name_spec())
+            ax.text(xmax - 3*stepx, ymin + stepy, self.pipes[-1].get_complete_name_spec())
         self._plot_finish(ax)
 
 
@@ -256,7 +278,7 @@ class PlotTimeseries(PlotObject):
                 prop = model.get_component(comp).get_property(prop)
             except ValueError:
                 prop = model.get_node(comp).get_property(prop)
-            ax.plot(x, prop.get_series(), label=label)
+            ax.plot(x, [x * prop.get_unit_factor() for x in prop.get_series()], label=label)
 
         self._plot_finish(ax)
 
@@ -267,14 +289,14 @@ class PlotText(PlotObject):
     """
     def __init__(self, text, *args, **kwargs):
         self.text = text
-        super().__init__(title='', xlabel='', ylabel='', *args, **kwargs)
+        super().__init__(title='', xlabel='', ylabel='')
 
     def plot(self, model, ax):
         props = dict(boxstyle='round', facecolor='white', alpha=0.5)
         ax.set_axis_off()
         if(ax.get_legend()):
             ax.get_legend().remove()
-        ax.text(-0.1, 1.0, self.text, transform=ax.transAxes, size=8, fontsize=9,
+        ax.text(-0.1, 1.0, self.text, transform=ax.transAxes, size=8, fontsize=8,
                 verticalalignment='top', bbox=props)
         self._plot_finish(ax)
 
@@ -292,7 +314,7 @@ class PlotTable(PlotObject):
         """
         self.df = dataframe
         self.columns = columns
-        super().__init__(title='', xlabel='', ylabel='', *args, **kwargs)
+        super().__init__(title='', xlabel='', ylabel='')
 
     def plot(self, model, ax):
         table = self.df[self.columns]
@@ -318,7 +340,7 @@ class PlotImage(PlotObject):
             image (numpy.array): numpy.array containing the image,  for example from matplotlib.pyplot.imread()
         """        
         self.img = image
-        super().__init__(title='', xlabel='', ylabel='', *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def plot(self, model, ax):
         if (ax.get_legend()):
