@@ -353,7 +353,9 @@ class WandaParameterScript:
         self.only_figures = only_figures
 
     def parse_excel_file(self):
-        input_data = pd.read_excel(self.excel_file, "Cases")
+        cols = pd.read_excel(self.excel_file, "Cases", header=None,nrows=1).values[0]
+        input_data = pd.read_excel(self.excel_file, "Cases", header=None, skiprows=1)
+        input_data.columns = cols
         output = pd.read_excel(self.excel_file, "Output")
         series = pd.read_excel(self.excel_file, 'Tplots')
         routes = pd.read_excel(self.excel_file, "Rplots")
@@ -390,8 +392,8 @@ class WandaParameterScript:
                                                 figures, plot_data, text_data, self.only_figures))
             # looping over all parameters and adding them to the scenario
             for j in range(column_start, len(input_data.axes[1])):
-                self.scenarios[-1].add_parameter(input_data.axes[1][j], input_data[input_data.axes[1][j]][0],
-                                                 input_data[input_data.axes[1][j]][i])
+                self.scenarios[-1].add_parameter(input_data.axes[1][j], input_data.iloc[0][j],
+                                                 input_data.iloc[i][j])
             for j in range(0, len(output.values)):
                 if not self.output_filled:
                     self.output_component.append(output.values[j][0])
@@ -456,7 +458,7 @@ def main(scenario, only_output):
     #    raise Exception(scenario + ' not recognized')
 
     #for config_file in config_file_list:
-    config_file = r'd:\cowi\config.yml'
+    config_file = r'd:\work\11203980-Musaimeer\forced_flow\config.yml'
     with open(config_file, 'r') as ymlfile:
         cfg = yaml.load(ymlfile, Loader=yaml.SafeLoader)
 
