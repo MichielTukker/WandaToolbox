@@ -22,7 +22,7 @@ def test_wandaplot_text(mocker):
                 'Discharge head for Suppliers',
                 f'All flow scenarios',
                 'flow rates',
-                '11201234,
+                '11201234',
                 'Appendix A',
                 f'Fig A.{counter}',
                 company_image=None,
