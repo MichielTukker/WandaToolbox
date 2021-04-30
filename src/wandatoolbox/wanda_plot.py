@@ -103,7 +103,7 @@ class PlotObject:
     """
     PlotObject, base class for different types of plots
     """
-    def __init__(self, title, xlabel, ylabel, xmin=None, xmax=None, xscale=1.0, ymin=None, ymax=None, yscale=1.0):
+    def __init__(self, title='', xlabel='', ylabel='', xmin=None, xmax=None, xscale=1.0, ymin=None, ymax=None, yscale=1.0):
         self.title = title
         self.xlabel = xlabel
         self.ylabel = ylabel
@@ -289,7 +289,7 @@ class PlotText(PlotObject):
     """
     def __init__(self, text, *args, **kwargs):
         self.text = text
-        super().__init__(title='', xlabel='', ylabel='')
+        super().__init__(*args, **kwargs)
 
     def plot(self, model, ax):
         props = dict(boxstyle='round', facecolor='white', alpha=0.5)
@@ -314,7 +314,7 @@ class PlotTable(PlotObject):
         """
         self.df = dataframe
         self.columns = columns
-        super().__init__(title='', xlabel='', ylabel='')
+        super().__init__(*args, **kwargs)
 
     def plot(self, model, ax):
         table = self.df[self.columns]
