@@ -19,11 +19,11 @@ def test_wandaplot_text(mocker):
 
         subplots_table = [PlotText("Testing text")]
         plot(model, subplots_table,
-                'Discharge head for Suppliers',
-                f'All flow scenarios',
-                'flow rates',
+                'Title',
+                'Case title',
+                'Case description',
                 '11201234',
-                'Appendix A',
+                'Section name',
                 f'Fig A.{counter}',
                 company_image=None,
                 fontsize=10)
@@ -41,11 +41,11 @@ def test_wandaplot_image(mocker):
 
         subplots_table = [PlotImage(img)]
         plot(model, subplots_table,
-                'Discharge head for Suppliers',
-                f'All flow scenarios',
-                'flow rates',
+                'Title',
+                'Case title',
+                'Case description',
                 '11201234',
-                'Appendix A',
+                'Section name',
                 f'Fig A.{counter}',
                 company_image=None,
                 fontsize=10)
@@ -64,11 +64,11 @@ def test_wandaplot_table(mocker):
 
         subplots_table = [PlotTable(df, df.columns)]
         plot(model, subplots_table,
-                'Discharge head for Suppliers',
-                f'All flow scenarios',
-                'flow rates',
+                'Title',
+                'Case title',
+                'Case description',
                 '11201234',
-                'Appendix A',
+                'Section name',
                 f'Fig A.{counter}',
                 company_image=None,
                 fontsize=10)
