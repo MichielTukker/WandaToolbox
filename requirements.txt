@@ -40,13 +40,13 @@ pytz==2019.3
 pywanda==0.4.1
 pywin32-ctypes==0.2.0
 readme-renderer==24.0
-requests==2.23.0
+requests==2.25.1
 requests-toolbelt==0.9.1
 six==1.16.0
 toml==0.10.2
 tqdm==4.43.0
 twine==3.1.1
-urllib3==1.25.8
+urllib3==1.26.5
 wcwidth==0.1.8
 webencodings==0.5.1
 wrapt==1.12.1
