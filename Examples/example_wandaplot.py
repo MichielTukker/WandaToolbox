@@ -4,7 +4,7 @@ import pandas as pd
 import pywanda as pw
 import sys
 sys.path.append('../')
-pipfrom wandatoolbox.wanda_plot import PlotSyschar, PlotText, PlotTable, PlotImage, plot
+from wandatoolbox.wanda_plot import PlotSyschar, PlotText, PlotTable, PlotImage, plot
 
 description_text = """
 Flow scenario 1: Flow rate at this supplier from 0 to Future Maximum, other suppliers at Current Minimum 
