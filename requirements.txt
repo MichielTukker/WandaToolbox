@@ -45,7 +45,6 @@ toml==0.10.2
 tqdm==4.62.2
 twine==3.4.2
 urllib3==1.26.6
--e git+https://github.com/MichielTukker/WandaToolbox.git@7cab73035942a617b3168e30a7a4fa736d0c07c6#egg=wandatoolbox
 webencodings==0.5.1
 xlrd==2.0.1
 zipp==3.5.0
