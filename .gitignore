@@ -131,6 +131,3 @@ dmypy.json
 #vscode
 .vscode
 launch.json
-
-# Github
-.github
