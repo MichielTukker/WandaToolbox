@@ -40,8 +40,8 @@ setup(
 
     extras_require={
         "dev": [
-            "pytest==5.3.5",
-            "bump2version==1.0.0",
+            "pytest==6.2.5",
+            "bump2version==1.0.1",
         ]
     },
     python_requires='>=3.6',
