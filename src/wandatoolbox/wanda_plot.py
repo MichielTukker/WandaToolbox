@@ -7,8 +7,8 @@ import numpy as np
 from .util import get_route_data, get_syschar
 
 
-def plot_7box(figure, title, case_title, case_description, proj_number, section_name, fig_name, company_name="Deltares",
-              software_version="Wanda 4.6", company_image=None, date=None,
+def plot_7box(figure, title, case_title, case_description, proj_number, section_name, fig_name,
+              company_name="Deltares", software_version="Wanda 4.6", company_image=None, date=None,
               fontsize=8):
     """
     Creates box around and in the plot window. Also fills in some info about the calculation.
@@ -35,12 +35,12 @@ def plot_7box(figure, title, case_title, case_description, proj_number, section_
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
 
-    l1 = ax.axhline(y=h3, xmin=v0, xmax=v3, linewidth=1.5, color='k')
-    l2 = ax.axvline(x=v1, ymin=h0, ymax=h3, linewidth=1.5, color='k')
-    l3 = ax.axhline(y=h1, xmin=v0, xmax=v3, linewidth=1.5, color='k')
-    l4 = ax.axvline(x=v2, ymin=h0, ymax=h1, linewidth=1.5, color='k')
-    l5 = ax.axvline(x=v2, ymin=h2, ymax=h3, linewidth=1.5, color='k')
-    l6 = ax.axhline(y=h2, xmin=v1, xmax=v3, linewidth=1.5, color='k')
+    l1 = ax.axhline(y=h3, xmin=v0, xmax=v3, linewidth=1.5, color='k')  # noqa: F841
+    l2 = ax.axvline(x=v1, ymin=h0, ymax=h3, linewidth=1.5, color='k')  # noqa: F841
+    l3 = ax.axhline(y=h1, xmin=v0, xmax=v3, linewidth=1.5, color='k')  # noqa: F841
+    l4 = ax.axvline(x=v2, ymin=h0, ymax=h1, linewidth=1.5, color='k')  # noqa: F841
+    l5 = ax.axvline(x=v2, ymin=h2, ymax=h3, linewidth=1.5, color='k')  # noqa: F841
+    l6 = ax.axhline(y=h2, xmin=v1, xmax=v3, linewidth=1.5, color='k')  # noqa: F841
 
     #     bbox = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
     #     width, height = bbox.width * fig.dpi, bbox.height * fig.dpi
@@ -103,7 +103,9 @@ class PlotObject:
     """
     PlotObject, base class for different types of plots
     """
-    def __init__(self, title='', xlabel='', ylabel='', xmin=None, xmax=None, xscale=1.0, ymin=None, ymax=None, yscale=1.0):
+
+    def __init__(self, title='', xlabel='', ylabel='', xmin=None, xmax=None, xscale=1.0,
+                 ymin=None, ymax=None, yscale=1.0):
         self.title = title
         self.xlabel = xlabel
         self.ylabel = ylabel
@@ -125,10 +127,10 @@ class PlotObject:
 
         xmin, xmax = np.array(ax.get_xlim()) / self.xscale
         ymin, ymax = np.array(ax.get_ylim()) / self.yscale
-        if (ymax - ymin) < 1:#
+        if (ymax - ymin) < 1:  #
             ymin = np.sign(ymin) * abs(ymin) * 0.9
             ymax = np.sign(ymax) * abs(ymax) * 1.1
-            if ymax < 1:#
+            if ymax < 1:  #
                 ymax = 100
         xmin = self.xmin if self.xmin is not None else xmin
         xmax = self.xmax if self.xmax is not None else xmax
@@ -152,7 +154,7 @@ class PlotObject:
         ax.set_position([box.x0, box.y0 + height_shrink,
                          box.width, box.height - height_shrink])
         ax.legend(loc='upper center', bbox_to_anchor=(0.5, -1 * height_shrink / box.height),
-                   fancybox=True, shadow=True, ncol=5, frameon=True)
+                  fancybox=True, shadow=True, ncol=5, frameon=True)
 
     def plot(self, model, ax):
         raise NotImplementedError
@@ -176,17 +178,17 @@ class PlotRoute(PlotObject):
         super().__init__(*args, **kwargs)
 
     def plot(self, model, ax):
-        s_location, elevation, data, s_location_profile = get_route_data(model, self.pipes, self.annotations, self.prop, self.times)
-
+        s_location, elevation, data, s_location_profile = get_route_data(model, self.pipes, self.annotations,
+                                                                         self.prop, self.times)
 
         color_ind = 0
         for t, v in data.items():
             # Min/max keep their name, but floats get a 's' unit appended
             if self.prop == 'Velocity' or self.prop == 'Discharge':
                 v = abs(v)
-            #if t == 0:
+            # if t == 0:
             #    label = f'{self.prop}' if not isinstance(t, str) else t
-            #else:
+            # else:
             #    label = f'{t} s' if not isinstance(t, str) else t
             label = f'{t} s' if not isinstance(t, str) else t
 
@@ -206,13 +208,13 @@ class PlotRoute(PlotObject):
                 ax.plot(text[0], text[1], 'ro')
                 ax.text(text[0] + text[2], text[1] + text[3], text[4])
         if True:
-            #ax.plot(text[0], text[1], 'ro')
+            # ax.plot(text[0], text[1], 'ro')
             xmin, xmax = np.array(ax.get_xlim()) / self.xscale
             ymin, ymax = np.array(ax.get_ylim()) / self.yscale
             stepx = (xmax - xmin) * 0.05
             stepy = (ymax - ymin) * 0.05
             ax.text(xmin + stepx, ymin + stepy, self.pipes[0].get_complete_name_spec())
-            ax.text(xmax - 3*stepx, ymin + stepy, self.pipes[-1].get_complete_name_spec())
+            ax.text(xmax - 3 * stepx, ymin + stepy, self.pipes[-1].get_complete_name_spec())
         self._plot_finish(ax)
 
 
@@ -287,6 +289,7 @@ class PlotText(PlotObject):
     """
     Creates a textbox on the page. Formatting is up to the user
     """
+
     def __init__(self, text, *args, **kwargs):
         self.text = text
         super().__init__(*args, **kwargs)
@@ -294,7 +297,7 @@ class PlotText(PlotObject):
     def plot(self, model, ax):
         props = dict(boxstyle='round', facecolor='white', alpha=0.5)
         ax.set_axis_off()
-        if(ax.get_legend()):
+        if (ax.get_legend()):
             ax.get_legend().remove()
         ax.text(-0.1, 1.0, self.text, transform=ax.transAxes, size=8, fontsize=8,
                 verticalalignment='top', bbox=props)
@@ -306,6 +309,7 @@ class PlotTable(PlotObject):
     Creates a table on the subplot/page.
     input is a Pandas dataframe
     """
+
     def __init__(self, dataframe, columns, *args, **kwargs):
         """Creates a table on the subplot/page.
 
@@ -338,7 +342,7 @@ class PlotImage(PlotObject):
 
         Args:
             image (numpy.array): numpy.array containing the image,  for example from matplotlib.pyplot.imread()
-        """        
+        """
         self.img = image
         super().__init__(*args, **kwargs)
 
@@ -356,7 +360,7 @@ def plot(model, plot_objects, *args, **kwargs):
     Args:
         model ([type]): Wanda model used as input
         plot_objects ([type]): List of objects to plot for the current page
-    """    
+    """
     fig = plt.figure(figsize=(8.27, 11.69))
     plt.subplots_adjust(left=0.15, right=0.89, top=0.92, bottom=0.16, hspace=0.2 + (len(plot_objects) - 2) * 0.05)
 

@@ -6,7 +6,7 @@ import multiprocessing as mp
 import time
 import queue
 import yaml
-from wanda_plot import plot, PlotTimeseries, PlotRoute, PlotText
+from wanda_plot import plot, PlotTimeseries, PlotRoute
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from PyPDF2 import PdfFileMerger
@@ -32,7 +32,7 @@ def parse_figures(series):
             times.append(series.values[i][index])
             index += 1
             while series.columns[index][0:7] == 'Unnamed':
-                if series.values[i][index] == series.values[i][index]:  #check for nan
+                if series.values[i][index] == series.values[i][index]:  # check for nan
                     times.append(series.values[i][index])
                 index += 1
         if not (series['fig'][i] in figure_dict):
@@ -63,22 +63,20 @@ def parse_text_data(point_data):
             point_data_parsed[fig] = {plot_num: [[x, y, dx, dy, text]]}
     return point_data_parsed
 
+
 # routine to perform the work.
 def do_work(tasks_to_accomplish, tasks_that_are_done):
     while True:
         try:
-            '''
-                try to get task from the queue. get_nowait() function will 
-                raise queue.Empty exception if the queue is empty. 
-                queue(False) function would do the same task also.                '''
+            # try to get task from the queue. get_nowait() function will
+            # raise queue.Empty exception if the queue is empty.
+            # queue(False) function would do the same task also.
             task = tasks_to_accomplish.get_nowait()
         except queue.Empty:
             break
         else:
-            '''
-                if no exception has been raised, add the task completion 
-                message to task_that_are_done queue
-            '''
+            # if no exception has been raised, add the task completion
+            # message to task_that_are_done queue
             print(task)
             result = task()
             tasks_that_are_done.put(result)
@@ -117,7 +115,7 @@ class WandaParameter:
             return wanda_item.get_property(self.wanda_property)
         elif self.wanda_property.lower() == "Disuse".lower():
             return wanda_item.set_disused
-        #raise Exception(self.wanda_property + " not in " + wanda_item.get_complete_name_spec())
+        # raise Exception(self.wanda_property + " not in " + wanda_item.get_complete_name_spec())
 
     def get_properties(self, model):
         properties = []
@@ -170,7 +168,7 @@ class WandaParameter:
             elif self.output.lower() == 'Max'.lower():
                 max_val = []
                 for wanda_property in wanda_properties:
-                    if not(wanda_property.is_disused()):
+                    if not (wanda_property.is_disused()):
                         max_val.append(wanda_property.get_extr_max())
                     else:
                         max_val.append(-np.inf)
@@ -189,7 +187,7 @@ class WandaParameter:
         return self.result
 
     def create_graphs(self, model):
-        with PdfPages(f'Document.pdf') as pdf:
+        with PdfPages('Document.pdf') as pdf:
             plot_time = [PlotTimeseries([(self.wanda_component, self.wanda_property, self.wanda_component)],
                                         title='test', xlabel='test2', ylabel='test2')]
             plot(model, plot_time, title='test', case_title='case_title', case_description='case_description',
@@ -216,7 +214,7 @@ class WandaScenario:
         self.model_file = model[:-4] + "_" + name + ".wdi"
         self.model_dir = os.path.split(model)[0]
         self.only_figures = only_figure
-        if not(os.path.exists(self.model_dir + '\\figures\\')):
+        if not (os.path.exists(self.model_dir + '\\figures\\')):
             os.mkdir(self.model_dir + '\\figures\\')
         if not self.only_figures:
             shutil.copyfile(model, self.model_file)
@@ -330,7 +328,7 @@ class WandaScenario:
                      proj_number=self.plot_data["Project number"],
                      section_name='Chapter ' + str(self.plot_data["Chapter"]),
                      date=date,
-                     #fig_name='Fig ' + self.plot_data["Appendix"] + '.' + f"{number:03}" + figure)
+                     # fig_name='Fig ' + self.plot_data["Appendix"] + '.' + f"{number:03}" + figure)
                      fig_name=self.plot_data["Appendix"] + '.' + f"{number:03}" + figure)
                 pdf.savefig()
                 plt.close()
@@ -353,7 +351,7 @@ class WandaParameterScript:
         self.only_figures = only_figures
 
     def parse_excel_file(self):
-        cols = pd.read_excel(self.excel_file, "Cases", header=None,nrows=1).values[0]
+        cols = pd.read_excel(self.excel_file, "Cases", header=None, nrows=1).values[0]
         input_data = pd.read_excel(self.excel_file, "Cases", header=None, skiprows=1)
         input_data.columns = cols
         output = pd.read_excel(self.excel_file, "Output")
@@ -404,8 +402,9 @@ class WandaParameterScript:
                                                                    series['fig'], series['plot'], series['Legend']):
                 self.scenarios[-1].add_output(comp, prop, 'Series', fig_number, plot_number, legend)
             for comp, prop, fig_number, plot_number, legend, direction in zip(routes['name'], routes['property'],
-                                                                   routes['fig'], routes['plot'], routes['Legend'],
-                                                                   directions):
+                                                                              routes['fig'], routes['plot'],
+                                                                              routes['Legend'],
+                                                                              directions):
                 self.scenarios[-1].add_output(comp, prop, 'Route', fig_number, plot_number, legend, direction=direction)
             self.output_filled = True
 
@@ -443,21 +442,21 @@ class WandaParameterScript:
 
 def main(scenario, only_output):
     #
-    #config_file_list = []
-    #if (scenario == 'Phase 1a') or (scenario == 'All'):
+    # config_file_list = []
+    # if (scenario == 'Phase 1a') or (scenario == 'All'):
     #    config_file_list.append(r'd:\akzo\model\V4\Sim_1A\config.yml')
-    #elif (scenario == 'Phase 1b') or (scenario == 'All'):
+    # elif (scenario == 'Phase 1b') or (scenario == 'All'):
     #    config_file_list.append(r'd:\akzo\model\V4\Sim_1B\config.yml')
-    #elif (scenario == 'Phase 2') or (scenario == 'All'):
+    # elif (scenario == 'Phase 2') or (scenario == 'All'):
     #    config_file_list.append(r'd:\akzo\model\V4\Sim_2\config.yml')
-    #elif (scenario == 'Phase 3') or (scenario == 'All'):
+    # elif (scenario == 'Phase 3') or (scenario == 'All'):
     #    config_file_list.append(r'd:\akzo\model\V4\Sim_3\config.yml')
-    #elif scenario == 'Steady':
+    # elif scenario == 'Steady':
     #    config_file_list.append(r'd:\akzo\model\V4\config.yml')
-    #else:
+    # else:
     #    raise Exception(scenario + ' not recognized')
 
-    #for config_file in config_file_list:
+    # for config_file in config_file_list:
     config_file = r'd:\work\11203980-Musaimeer\forced_flow\config.yml'
     with open(config_file, 'r') as ymlfile:
         cfg = yaml.load(ymlfile, Loader=yaml.SafeLoader)
@@ -465,11 +464,11 @@ def main(scenario, only_output):
     wanda_bin = cfg['General']['Wanda-bin-directory']
     wanda_model = cfg['parameterscript']['wanda-model']
     excel_file = cfg['parameterscript']['excel_sheet']
-    nop = cfg['General']['number_of_processes']
+    # nop = cfg['General']['number_of_processes']
     para = WandaParameterScript(wanda_model, wanda_bin, excel_file, only_output)
     para.parse_excel_file()
     para.scenarios[0].run_scenario()
-    #para.run_scenarios(nop)
+    # para.run_scenarios(nop)
 
 
 if __name__ == '__main__':

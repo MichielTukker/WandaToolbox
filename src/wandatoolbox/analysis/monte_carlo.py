@@ -4,7 +4,6 @@ This is a somewhat more extensive example showing Monte Carlo simulations with W
 This also shows how you can run Wanda cases in parallel by using the multiprocessing features in python
 """
 
-import csv
 import multiprocessing as mp
 import os
 import pywanda as pw
@@ -27,7 +26,8 @@ class MonteCarloInputProperty:
             max_val (float, optional): [description]. Defaults to 0.0.
             dist_type (str, optional): [description]. Defaults to "Empty".
             keyword (bool, optional): [description]. Defaults to False.
-        """        self.wanda_prop = []
+        """
+        self.wanda_prop = []
         self.prop_name = prop_name
         self.comp_name = comp_name
         self.min_val = min_val
@@ -39,13 +39,11 @@ class MonteCarloInputProperty:
 
     def initialize_property(self, model):
         if self.comp_name == "GENERAL":
-            # it is a general property(e.g. density, viscosity)
             self.wanda_prop.append(model.get_property(self.prop_name))
         else:
             if self.is_keyword:
-                comps = model.get_components_with_keyword(self.comp_name)  # getting all components with a given keyword
+                comps = model.get_components_with_keyword(self.comp_name)
                 for comp in comps:
-                    # check if the component has the property, otherwise the component is skipped
                     if comp.contains_property(self.prop_name):
                         self.wanda_prop.append(comp.get_property(self.prop_name))
             else:
@@ -85,7 +83,7 @@ class MonteCarloOutputProperty:
             self.wanda_prop.append(model.get_property(self.prop_name))
         else:
             if self.is_keyword:
-                comps = model.get_components_with_keyword(self.comp_name)  # getting all components with a given keyword
+                comps = model.get_components_with_keyword(self.comp_name)
                 for comp in comps:
                     # check if the component has the property, otherwise the component is skipped
                     if comp.contains_property(self.prop_name):
@@ -214,8 +212,8 @@ class WandaMonteCarlo:
         pool.join()
         logger.debug("workers have finished, generating output")
 
-        # you need to transport the output data to the output objects manually, this cannot be transferred easily over the
-        # Multi-process boundary
+        # you need to transport the output data to the output objects manually, this cannot be transferred easily over
+        # the Multi-process boundary
         all_results = [res for results in output for res in results.get()]
         for res in all_results:
             for i in range(len(res)):
@@ -232,7 +230,7 @@ class WandaMonteCarlo:
     def plot_results(self, filename_prefix, width=300, height=300):
         for output in self.outputs:
             data = output.get_results()
-            f, axarr = plt.subplots(3, sharex=False)
+            f, axarr = plt.subplots(3, sharex='none')
             axarr[0].hist(output.get_results(), 15)
             axarr[0].set_xlabel(output.prop_name + "_" + output.extreme)
             axarr[0].set_ylabel('Number of occurences')
