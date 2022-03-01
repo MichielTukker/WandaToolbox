@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import logging
+from wandatoolbox.wanda_plot import get_syschar
 
 
 class MonteCarloInputProperty:
