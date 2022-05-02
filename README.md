@@ -1,8 +1,7 @@
-![Build and Test](https://github.com/MichielTukker/WandaToolbox/workflows/Build%20and%20Test/badge.svg)
-![Upload Python Package](https://github.com/MichielTukker/WandaToolbox/workflows/Upload%20Python%20Package/badge.svg)
-![Documentation Status](https://readthedocs.org/projects/wandatoolbox/badge/?version=latest)
-![Pypi](https://img.shields.io/pypi/v/wandatoolbox)
-![Github release](https://img.shields.io/github/v/release/michieltukker/wandatoolbox)
+[![Build and Test](https://github.com/MichielTukker/WandaToolbox/actions/workflows/pythonBuildTest.yml/badge.svg)](https://github.com/MichielTukker/WandaToolbox/actions/workflows/pythonBuildTest.yml)
+[![Documentation Status](https://readthedocs.org/projects/wandatoolbox/badge/?version=latest)](https://wandatoolbox.readthedocs.io/en/latest/)
+[![Pypi](https://img.shields.io/pypi/v/wandatoolbox)](https://pypi.org/project/wandatoolbox/)
+[![Github release](https://img.shields.io/github/v/release/michieltukker/wandatoolbox)](https://github.com/MichielTukker/WandaToolbox/releases)
 
 # Wanda Toolbox
 Toolbox (python scripts) for Wanda modellers. This toolbox includes several tools and utilities that can help with Wanda modelling, 
