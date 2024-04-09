@@ -299,7 +299,7 @@ class PlotText(PlotObject):
         ax.set_axis_off()
         if (ax.get_legend()):
             ax.get_legend().remove()
-        ax.text(-0.1, 1.0, self.text, transform=ax.transAxes, size=8, fontsize=8,
+        ax.text(-0.1, 1.0, self.text, transform=ax.transAxes, fontsize=8,
                 verticalalignment='top', bbox=props)
         self._plot_finish(ax)
 

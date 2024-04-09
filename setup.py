@@ -32,17 +32,23 @@ setup(
         "Topic :: Scientific/Engineering :: Physics",
     ],
     install_requires=[
-        "pywanda>=0.4.1",
-        "matplotlib>=3.1.3",
-        "pandas>=1.0.1",
-        "numpy>=1.18.1"
+        "pywanda>=0.4.6",
+        "matplotlib>=3.5.2",
+        "pandas>=1.4.3",
+        "numpy>=1.23.1"
     ],
 
     extras_require={
         "dev": [
-            "pytest==6.2.5",
+            "pytest==7.1.2",
             "bump2version==1.0.1",
+            "twine>=4.0.1",
+        ],
+        "doc": [
+            "Sphinx==5.0.2",
+            "sphinx-rtd-theme==1.0.0",
         ]
+
     },
     python_requires='>=3.6',
 )
