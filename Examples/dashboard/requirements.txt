@@ -20,6 +20,6 @@ pytz==2020.4
 pywanda==0.4.1
 retrying==1.3.3
 six==1.15.0
-Werkzeug==2.2.3
+Werkzeug==3.0.3
 xlrd==1.2.0
 xmltodict==0.12.0
