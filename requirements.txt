@@ -37,7 +37,7 @@ pywanda==0.4.2
 pywin32-ctypes==0.2.0
 PyYAML==5.4.1
 readme-renderer==29.0
-requests==2.32.2
+requests==2.32.4
 requests-toolbelt==0.9.1
 rfc3986==1.5.0
 six==1.16.0
