@@ -44,7 +44,7 @@ six==1.16.0
 toml==0.10.2
 tqdm==4.66.3
 twine==3.4.2
-urllib3==2.5.0
+urllib3==2.6.0
 webencodings==0.5.1
 xlrd==2.0.1
 zipp==3.19.1
